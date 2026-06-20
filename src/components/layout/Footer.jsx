@@ -2,7 +2,7 @@
  * Footer — App footer with author info and attribution
  */
 import React from 'react';
-import { Mail, Heart, ExternalLink, Zap, Github } from 'lucide-react';
+import { Mail, Heart, ExternalLink, Zap } from 'lucide-react';
 
 export default function Footer() {
   const year = new Date().getFullYear();
