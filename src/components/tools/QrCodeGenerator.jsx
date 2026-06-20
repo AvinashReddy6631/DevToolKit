@@ -25,6 +25,8 @@ export default function QrCodeGenerator() {
   const [text, setText]       = useState('https://digitalheroesco.com');
   const [size, setSize]       = useState(256);
   const [downloaded, setDled] = useState(false);
+  const [qrError, setQrError] = useState('');
+  const MAX_QR_LENGTH = 10000;
   const canvasRef = useRef(null);
   const { copy, copied }      = useClipboard();
 
@@ -83,7 +85,17 @@ export default function QrCodeGenerator() {
               id="qr-input"
               className="input w-full p-3 min-h-[100px]"
               value={text}
-              onChange={e => setText(e.target.value)}
+              onChange={(e) => {
+  const value = e.target.value;
+
+    if (value.length > MAX_QR_LENGTH) {
+      setQrError('Content is too large for QR code generation.');
+    } else {
+      setQrError('');
+    }
+  
+    setText(value);
+      }}
               placeholder="Enter a URL, text, or data..."
               spellCheck={false}
               aria-label="QR code content"
@@ -133,7 +145,7 @@ export default function QrCodeGenerator() {
               <span className="text-2xs text-[var(--text-disabled)] font-mono">{size}×{size}</span>
             </div>
 
-            {text.trim() ? (
+            {text.trim() && !qrError ? (
               <>
                 <div
                   ref={canvasRef}
@@ -149,18 +161,19 @@ export default function QrCodeGenerator() {
                     size={Math.min(size, 280)}
                     fgColor="#000000"
                     bgColor="#ffffff"
-                    level="H"
+                    level="M"
                     includeMargin={false}
                   />
                 </div>
 
                 <div className="flex gap-2 mt-4 w-full">
                   <Button
-                    id="btn-download-qr"
-                    variant="primary"
-                    onClick={handleDownload}
-                    className="flex-1 justify-center"
-                  >
+  id="btn-download-qr"
+  variant="primary"
+  onClick={handleDownload}
+  disabled={!!qrError}
+  className="flex-1 justify-center"
+>
                     {downloaded
                       ? <><Check size={14} strokeWidth={2} /> Downloaded</>
                       : <><Download size={14} strokeWidth={1.75} /> Download PNG</>
@@ -182,6 +195,14 @@ export default function QrCodeGenerator() {
               </div>
             )}
           </Card>
+
+          {qrError && (
+  <div className="flex flex-col items-center justify-center min-h-[240px] w-full">
+    <p className="text-red-500 text-sm font-medium">
+      {qrError}
+    </p>
+  </div>
+)}
 
           <div className="text-xs text-[var(--text-tertiary)] space-y-0.5 px-1">
             <p>High error correction (Level H) for reliable scanning</p>
