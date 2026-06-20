@@ -1,26 +1,11 @@
 /**
- * Button — Reusable button with multiple variants
+ * Button — Clean, professional button (Vercel-inspired)
+ * White primary, dark secondary, minimal ghost, red danger
  */
 import React from 'react';
 
-const variants = {
-  gradient: 'btn-gradient text-white',
-  ghost:    'btn-ghost',
-  danger:   'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/40 rounded-xl font-medium cursor-pointer transition-all duration-200',
-  success:  'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 rounded-xl font-medium cursor-pointer transition-all duration-200',
-};
-
-const sizes = {
-  sm:  'px-3 py-1.5 text-sm',
-  md:  'px-4 py-2.5 text-sm',
-  lg:  'px-6 py-3 text-base',
-};
-
-/**
- * @param {{ variant, size, icon, children, className, disabled, ...rest }} props
- */
 export default function Button({
-  variant = 'gradient',
+  variant = 'primary',
   size = 'md',
   icon: Icon,
   children,
@@ -28,18 +13,29 @@ export default function Button({
   disabled = false,
   ...rest
 }) {
-  const base = 'inline-flex items-center gap-2 font-medium rounded-xl transition-all duration-200 select-none focus:outline-none focus:ring-2 focus:ring-indigo-500/40';
-  const variantClass = variants[variant] || variants.ghost;
-  const sizeClass = sizes[size] || sizes.md;
-  const disabledClass = disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : '';
+  const variantMap = {
+    primary:   'btn-primary',
+    secondary: 'btn-secondary',
+    ghost:     'btn-ghost',
+    danger:    'btn-danger',
+  };
+
+  const sizeMap = {
+    sm: 'h-[28px] px-2.5 text-xs gap-1.5',
+    md: 'h-[34px] px-3.5 text-[0.8125rem] gap-1.5',
+    lg: 'h-[38px] px-5 text-sm gap-2',
+  };
+
+  const cls = variantMap[variant] || variantMap.secondary;
+  const sz = sizeMap[size] || sizeMap.md;
 
   return (
     <button
-      className={`${base} ${variantClass} ${sizeClass} ${disabledClass} ${className}`}
+      className={`${cls} ${sz} ${disabled ? 'opacity-35 cursor-not-allowed pointer-events-none' : ''} ${className}`}
       disabled={disabled}
       {...rest}
     >
-      {Icon && <Icon size={16} />}
+      {Icon && <Icon size={size === 'sm' ? 13 : 14} strokeWidth={1.75} />}
       {children}
     </button>
   );

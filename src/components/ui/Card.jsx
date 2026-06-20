@@ -1,28 +1,24 @@
 /**
- * Card — Glassmorphism card wrapper component
+ * Card — Sharp, bordered card (Stripe/Vercel style)
+ * No glassmorphism. Clean borders, subtle hover.
  */
 import React from 'react';
 
-/**
- * @param {{ children, className, title, icon, description, badge }} props
- */
-export default function Card({ children, className = '', title, icon: Icon, description, badge }) {
+export default function Card({ children, className = '', title, icon: Icon, description, badge, noPadding = false }) {
   return (
-    <div className={`glass-card p-6 md:p-8 animate-fade-in ${className}`}>
+    <div className={`card animate-fade-in ${noPadding ? '' : 'p-5 md:p-6'} ${className}`}>
       {(title || Icon) && (
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center gap-3">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-2.5">
             {Icon && (
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 border border-indigo-500/20">
-                <Icon size={20} className="text-indigo-400" />
-              </div>
+              <Icon size={16} className="text-[var(--text-tertiary)]" strokeWidth={1.75} />
             )}
             <div>
               {title && (
-                <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+                <h2 className="text-[0.8125rem] font-semibold text-[var(--text-primary)] tracking-[-0.01em]">{title}</h2>
               )}
               {description && (
-                <p className="text-sm text-slate-400 mt-0.5">{description}</p>
+                <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{description}</p>
               )}
             </div>
           </div>

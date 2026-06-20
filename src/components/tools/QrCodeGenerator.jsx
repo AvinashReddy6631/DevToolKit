@@ -1,34 +1,32 @@
 /**
- * QrCodeGenerator — QR code generator with PNG download and live preview
+ * QrCodeGenerator — QR code generator with download
+ * Vercel dashboard style: clean, minimal
  */
 import React, { useState, useRef, useCallback } from 'react';
-import { QrCode, Download, Link, Type, Trash2, Copy, Check } from 'lucide-react';
+import { QrCode, Download, Link, Type, Copy, Check } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { useClipboard } from '../../hooks/useClipboard';
 
-const SIZE_OPTIONS = [
-  { label: 'Small',  value: 160, desc: '160×160' },
-  { label: 'Medium', value: 256, desc: '256×256' },
-  { label: 'Large',  value: 384, desc: '384×384' },
+const SIZES = [
+  { label: 'Small',  value: 160, desc: '160px' },
+  { label: 'Medium', value: 256, desc: '256px' },
+  { label: 'Large',  value: 384, desc: '384px' },
 ];
 
 const PRESETS = [
-  { label: 'URL', value: 'https://digitalheroesco.com', icon: Link },
+  { label: 'URL',   value: 'https://digitalheroesco.com', icon: Link },
   { label: 'Email', value: 'mailto:dareddy2005@gmail.com', icon: Type },
-  { label: 'Phone', value: 'tel:+1234567890', icon: Type },
-  { label: 'WiFi', value: 'WIFI:T:WPA;S:MyNetwork;P:password123;;', icon: Type },
+  { label: 'WiFi',  value: 'WIFI:T:WPA;S:MyNetwork;P:password123;;', icon: Type },
 ];
 
 export default function QrCodeGenerator() {
-  const [text, setText]         = useState('https://digitalheroesco.com');
-  const [size, setSize]         = useState(256);
-  const [fgColor, setFgColor]   = useState('#6366f1');
-  const [bgColor, setBgColor]   = useState('#ffffff');
-  const [downloaded, setDownloaded] = useState(false);
+  const [text, setText]       = useState('https://digitalheroesco.com');
+  const [size, setSize]       = useState(256);
+  const [downloaded, setDled] = useState(false);
   const canvasRef = useRef(null);
-  const { copy, copied } = useClipboard();
+  const { copy, copied }      = useClipboard();
 
   const handleDownload = useCallback(() => {
     const canvas = canvasRef.current?.querySelector('canvas');
@@ -36,48 +34,42 @@ export default function QrCodeGenerator() {
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = url;
-    const filename = text.replace(/[^a-z0-9]/gi, '_').slice(0, 30) || 'qrcode';
-    a.download = `${filename}_qrcode.png`;
+    a.download = `${(text.replace(/[^a-z0-9]/gi, '_').slice(0, 25) || 'qrcode')}_qr.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setDownloaded(true);
-    setTimeout(() => setDownloaded(false), 2000);
+    setDled(true);
+    setTimeout(() => setDled(false), 2000);
   }, [text]);
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-5 animate-slide-up">
 
-      {/* Title */}
       <div>
-        <h1 className="text-2xl font-bold text-white">QR Code <span className="gradient-text">Generator</span></h1>
-        <p className="text-slate-400 text-sm mt-1">Generate QR codes for URLs, text, email, phone, and more</p>
+        <h1 className="text-lg font-semibold text-[var(--text-primary)] tracking-[-0.02em]">
+          QR Code Generator
+        </h1>
+        <p className="text-[0.8125rem] text-[var(--text-tertiary)] mt-0.5">
+          Generate QR codes from text, URLs, or data
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
 
-        {/* Left: Input + options */}
-        <div className="lg:col-span-3 flex flex-col gap-4">
+        {/* Left: Inputs */}
+        <div className="lg:col-span-3 space-y-4">
 
           {/* Presets */}
           <Card>
-            <p className="text-sm font-semibold text-slate-300 mb-3">Quick Presets</p>
-            <div className="flex flex-wrap gap-2">
+            <p className="label mb-2.5">Presets</p>
+            <div className="flex flex-wrap gap-1.5">
               {PRESETS.map(({ label, value, icon: Icon }) => (
                 <button
                   key={label}
                   onClick={() => setText(value)}
-                  className={`
-                    flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium
-                    border transition-all duration-200 cursor-pointer
-                    ${text === value
-                      ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300'
-                      : 'bg-white/3 border-white/8 text-slate-400 hover:bg-white/6 hover:border-white/15 hover:text-slate-300'
-                    }
-                  `}
-                  aria-label={`Load ${label} preset`}
+                  className={`btn-ghost ${text === value ? '!bg-[var(--surface-3)] !border-[var(--border-strong)] !text-[var(--text-primary)]' : ''}`}
                 >
-                  <Icon size={13} />
+                  <Icon size={12} strokeWidth={1.75} />
                   {label}
                 </button>
               ))}
@@ -86,162 +78,114 @@ export default function QrCodeGenerator() {
 
           {/* Text input */}
           <Card>
-            <label htmlFor="qr-input" className="text-sm font-semibold text-slate-300 mb-3 block">
-              Enter Text or URL
-            </label>
-            <div className="relative">
-              <textarea
-                id="qr-input"
-                className="plain-textarea w-full p-4 min-h-[120px]"
-                value={text}
-                onChange={e => setText(e.target.value)}
-                placeholder="Enter a URL, text, email, or phone number..."
-                spellCheck={false}
-                aria-label="QR code content"
-              />
-              {text && (
-                <div className="absolute bottom-3 right-3">
-                  <span className="text-xs text-slate-600 font-mono">{text.length} chars</span>
-                </div>
-              )}
-            </div>
+            <label htmlFor="qr-input" className="label block mb-2.5">Content</label>
+            <textarea
+              id="qr-input"
+              className="input w-full p-3 min-h-[100px]"
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="Enter a URL, text, or data..."
+              spellCheck={false}
+              aria-label="QR code content"
+            />
             {text.length > 2953 && (
-              <p className="mt-2 text-xs text-amber-400">
-                ⚠️ Very long text may result in a dense QR code that's hard to scan
+              <p className="mt-2 text-xs text-[#f59e0b]">
+                Very long text may produce a dense, hard-to-scan QR code
               </p>
             )}
           </Card>
 
-          {/* Size selector */}
+          {/* Size */}
           <Card>
-            <p className="text-sm font-semibold text-slate-300 mb-3">Output Size</p>
+            <p className="label mb-2.5">Output size</p>
             <div className="grid grid-cols-3 gap-2">
-              {SIZE_OPTIONS.map(({ label, value, desc }) => (
+              {SIZES.map(({ label, value, desc }) => (
                 <button
                   key={value}
                   id={`qr-size-${label.toLowerCase()}`}
                   onClick={() => setSize(value)}
                   className={`
-                    p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer
+                    p-2.5 rounded-md border text-center cursor-pointer
+                    transition-all duration-100
                     ${size === value
-                      ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300'
-                      : 'bg-white/3 border-white/8 text-slate-400 hover:bg-white/6 hover:border-white/15'
+                      ? 'bg-[var(--surface-3)] border-[var(--border-strong)] text-[var(--text-primary)]'
+                      : 'bg-transparent border-[var(--border)] text-[var(--text-tertiary)] hover:border-[var(--border-strong)] hover:text-[var(--text-secondary)]'
                     }
                   `}
                   aria-pressed={size === value}
                 >
-                  <div className="text-sm font-semibold">{label}</div>
-                  <div className="text-xs opacity-60 mt-0.5">{desc}</div>
+                  <div className="text-[0.8125rem] font-medium">{label}</div>
+                  <div className="text-2xs opacity-60 mt-0.5">{desc}</div>
                 </button>
               ))}
             </div>
           </Card>
-
-          {/* Color options */}
-          <Card>
-            <p className="text-sm font-semibold text-slate-300 mb-3">Colors</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="qr-fg" className="text-xs text-slate-400 block mb-2">
-                  Foreground (QR dots)
-                </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    id="qr-fg"
-                    type="color"
-                    value={fgColor}
-                    onChange={e => setFgColor(e.target.value)}
-                    className="w-9 h-9 rounded-lg border border-white/10 cursor-pointer bg-transparent"
-                    aria-label="QR foreground color"
-                  />
-                  <span className="text-sm font-mono text-slate-400">{fgColor}</span>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="qr-bg" className="text-xs text-slate-400 block mb-2">
-                  Background
-                </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    id="qr-bg"
-                    type="color"
-                    value={bgColor}
-                    onChange={e => setBgColor(e.target.value)}
-                    className="w-9 h-9 rounded-lg border border-white/10 cursor-pointer bg-transparent"
-                    aria-label="QR background color"
-                  />
-                  <span className="text-sm font-mono text-slate-400">{bgColor}</span>
-                </div>
-              </div>
-            </div>
-          </Card>
         </div>
 
-        {/* Right: Preview + download */}
-        <div className="lg:col-span-2 flex flex-col gap-4">
+        {/* Right: Preview */}
+        <div className="lg:col-span-2 space-y-4">
           <Card className="flex flex-col items-center">
             <div className="flex items-center justify-between w-full mb-4">
-              <span className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                <QrCode size={15} className="text-indigo-400" />
-                Preview
-              </span>
-              <span className="text-xs text-slate-500">{size}×{size}px</span>
+              <div className="flex items-center gap-2">
+                <QrCode size={14} className="text-[var(--text-tertiary)]" strokeWidth={1.75} />
+                <span className="label">Preview</span>
+              </div>
+              <span className="text-2xs text-[var(--text-disabled)] font-mono">{size}×{size}</span>
             </div>
 
             {text.trim() ? (
               <>
-                {/* QR canvas */}
                 <div
                   ref={canvasRef}
-                  className="p-4 rounded-2xl shadow-[0_0_40px_rgba(99,102,241,0.2)]"
-                  style={{ background: bgColor }}
+                  className="p-5 rounded-lg"
+                  style={{
+                    background: '#fff',
+                    border: '1px solid var(--border)',
+                  }}
                 >
                   <QRCodeCanvas
                     id="qr-canvas"
                     value={text}
-                    size={Math.min(size, 300)}
-                    fgColor={fgColor}
-                    bgColor={bgColor}
+                    size={Math.min(size, 280)}
+                    fgColor="#000000"
+                    bgColor="#ffffff"
                     level="H"
                     includeMargin={false}
                   />
                 </div>
 
-                {/* Actions */}
-                <div className="flex gap-2 mt-5 w-full">
+                <div className="flex gap-2 mt-4 w-full">
                   <Button
                     id="btn-download-qr"
-                    variant="gradient"
+                    variant="primary"
                     onClick={handleDownload}
                     className="flex-1 justify-center"
                   >
                     {downloaded
-                      ? <><Check size={15} /> Downloaded!</>
-                      : <><Download size={15} /> Download PNG</>
+                      ? <><Check size={14} strokeWidth={2} /> Downloaded</>
+                      : <><Download size={14} strokeWidth={1.75} /> Download PNG</>
                     }
                   </Button>
-                  <Button
-                    variant="ghost"
+                  <button
                     onClick={() => copy(text)}
+                    className="btn-secondary h-[34px] px-3"
                     aria-label="Copy content"
                   >
-                    {copied ? <Check size={15} /> : <Copy size={15} />}
-                  </Button>
+                    {copied ? <Check size={14} strokeWidth={2} /> : <Copy size={14} strokeWidth={1.75} />}
+                  </button>
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center min-h-[260px] w-full">
-                <QrCode size={48} className="text-slate-700 mb-3" />
-                <p className="text-slate-500 text-sm">Enter text to generate QR</p>
+              <div className="flex flex-col items-center justify-center min-h-[240px] w-full">
+                <QrCode size={32} className="text-[var(--text-disabled)] mb-2" strokeWidth={1.5} />
+                <p className="text-[var(--text-tertiary)] text-[0.8125rem]">Enter text to generate</p>
               </div>
             )}
           </Card>
 
-          {/* Tips */}
-          <div className="glass-card p-4 text-xs text-slate-500 flex flex-col gap-1">
-            <p>📱 Works with any QR scanner app</p>
-            <p>🎨 Use high-contrast colors for best scan reliability</p>
-            <p>⬇️ Download is a transparent-background PNG</p>
+          <div className="text-xs text-[var(--text-tertiary)] space-y-0.5 px-1">
+            <p>High error correction (Level H) for reliable scanning</p>
+            <p>Download exports at the selected resolution</p>
           </div>
         </div>
       </div>

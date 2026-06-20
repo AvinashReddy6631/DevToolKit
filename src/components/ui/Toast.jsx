@@ -1,65 +1,47 @@
 /**
- * Toast — Notification toast container and individual toast items
+ * Toast — Clean notification toasts
  */
 import React from 'react';
 import { CheckCircle, XCircle, Info, X } from 'lucide-react';
 
 const icons = {
-  success: <CheckCircle size={16} className="text-emerald-400 shrink-0" />,
-  error:   <XCircle size={16} className="text-red-400 shrink-0" />,
-  info:    <Info size={16} className="text-indigo-400 shrink-0" />,
+  success: <CheckCircle size={14} className="text-[#4ade80] shrink-0" strokeWidth={2} />,
+  error:   <XCircle size={14} className="text-[#f87171] shrink-0" strokeWidth={2} />,
+  info:    <Info size={14} className="text-[var(--text-secondary)] shrink-0" strokeWidth={2} />,
 };
 
-const colors = {
-  success: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-100',
-  error:   'bg-red-500/10 border-red-500/25 text-red-100',
-  info:    'bg-indigo-500/10 border-indigo-500/25 text-indigo-100',
-};
-
-/**
- * Individual toast item
- */
 function ToastItem({ toast, onDismiss }) {
-  const colorClass = colors[toast.type] || colors.info;
-  const icon = icons[toast.type] || icons.info;
-
   return (
     <div
-      className={`
-        toast-enter flex items-start gap-3 px-4 py-3 rounded-xl border
-        backdrop-blur-xl shadow-lg max-w-sm w-full
-        ${colorClass}
-      `}
+      className="toast-enter flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border max-w-xs w-full"
+      style={{
+        background: 'var(--surface-1)',
+        borderColor: 'var(--border)',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)',
+      }}
       role="alert"
       aria-live="polite"
     >
-      {icon}
-      <span className="flex-1 text-sm font-medium">{toast.message}</span>
+      {icons[toast.type] || icons.info}
+      <span className="flex-1 text-[0.8125rem] font-medium text-[var(--text-primary)]">
+        {toast.message}
+      </span>
       <button
         onClick={() => onDismiss(toast.id)}
-        aria-label="Dismiss notification"
-        className="opacity-50 hover:opacity-100 transition-opacity ml-1"
+        aria-label="Dismiss"
+        className="opacity-40 hover:opacity-100 transition-opacity"
       >
-        <X size={14} />
+        <X size={13} />
       </button>
     </div>
   );
 }
 
-/**
- * Toast container — render at app root level
- * @param {{ toasts, onDismiss }} props
- */
 export default function ToastContainer({ toasts, onDismiss }) {
   if (!toasts.length) return null;
   return (
-    <div
-      className="fixed bottom-6 right-6 z-50 flex flex-col gap-2"
-      aria-label="Notifications"
-    >
-      {toasts.map(t => (
-        <ToastItem key={t.id} toast={t} onDismiss={onDismiss} />
-      ))}
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2" aria-label="Notifications">
+      {toasts.map(t => <ToastItem key={t.id} toast={t} onDismiss={onDismiss} />)}
     </div>
   );
 }
