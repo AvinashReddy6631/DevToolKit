@@ -14,7 +14,7 @@ Built by **Avinash Reddy** · [dareddy2005@gmail.com](mailto:dareddy2005@gmail.c
 
 </div>
 
----
+
 
 ## ✨ Features
 
@@ -25,7 +25,7 @@ Built by **Avinash Reddy** · [dareddy2005@gmail.com](mailto:dareddy2005@gmail.c
 | 📱 **QR Code Generator** | Generate QR codes from text/URLs, download as PNG |
 | 📝 **Word & Character Counter** | Real-time text analysis: words, characters, sentences, reading time |
 
----
+
 
 ## 🛠️ Tech Stack
 
@@ -36,7 +36,7 @@ Built by **Avinash Reddy** · [dareddy2005@gmail.com](mailto:dareddy2005@gmail.c
 - **lucide-react** — Icon library
 - **Web Crypto API** — Cryptographically secure password generation
 
----
+
 
 ## 🚀 Getting Started
 
@@ -77,7 +77,7 @@ Output will be in the `dist/` directory.
 npm run preview
 ```
 
----
+
 
 ## 📦 Deployment
 
@@ -100,7 +100,6 @@ Push to `main` branch → Vercel auto-deploys via GitHub integration.
 
 > **Note:** No environment variables needed. The app is fully static.
 
----
 
 ## 📁 Project Structure
 
@@ -140,7 +139,7 @@ dev-productivity-toolkit/
 └── README.md
 ```
 
----
+
 
 ## 🎨 Design Highlights
 
@@ -150,27 +149,25 @@ dev-productivity-toolkit/
 - Smooth tab transitions and micro-animations
 - Fully responsive: mobile-first, tested at 375px–2560px
 
----
+
 
 ## 🔒 Privacy
 
 All tools run entirely in your browser. No data is ever sent to any server.
 
----
+
 
 ## 👤 Author
 
 **Avinash Reddy**  
 📧 [dareddy2005@gmail.com](mailto:dareddy2005@gmail.com)
 
----
 
 ## 🏆 Built for Digital Heroes
 
 This project was created as part of a software developer assessment.  
 [Visit Digital Heroes Co →](https://digitalheroesco.com)
 
----
 
 ## 📄 License
 
